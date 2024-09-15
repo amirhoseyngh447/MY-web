@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>مدیریت داشبورد</h1>
+        <button id="logoutButton">خروج</button>
+    </header>
+    <main class="container">
+        <section id="manage-items">
+            <h2>مدیریت کفش‌ها</h2>
+            <form id="addItemForm">
+                <label for="itemName">نام کفش:</label>
+                <input type="text" id="itemName" required>
+                
+                <label for="itemBrand">برند:</label>
+                <select id="itemBrand" required>
+                    <option value="">انتخاب برند</option>
+                    <option value="Nike">نایکی</option>
+                    <option value="Adidas">آدیداس</option>
+                    <option value="Puma">پوما</option>
+                    <option value="Balenciaga">بالنسیاگا</option>
+                    <!-- Add more brands as needed -->
+                </select>
+
+                <label for="itemColor">رنگ:</label>
+                <input type="text" id="itemColor" placeholder="قرمز" required>
+                <button type="button" id="addColorButton">اضافه کردن رنگ</button>
+                <ul id="colorList"></ul>
+
+                <label for="itemPrice">قیمت:</label>
+                <input type="number" id="itemPrice" required>
+                
+                <label for="itemImage">آدرس تصویر:</label>
+                <input type="url" id="itemImage" required>
+
+                <button type="submit">اضافه کردن کفش</button>
+            </form>
+            <div id="itemList">
+                <h3>لیست کفش‌های موجود</h3>
+                <ul id="shoes"></ul>
+            </div>
+            <div id="outOfStockList">
+                <h3>لیست کفش‌های ناموجود</h3>
+                <ul id="outOfStockShoes"></ul>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 فروشگاه کفش. تمامی حقوق محفوظ است.</p>
+    </footer>
+
+    <script>
+        const shoes = JSON.parse(localStorage.getItem('shoes')) || [];
+
+        document.getElementById('addItemForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const itemName = document.getElementById('itemName').value;
+            const itemBrand = document.getElementById('itemBrand').value;
+            const itemColors = Array.from(document.querySelectorAll('#colorList li')).map(li => ({ color: li.textContent, stock: 'in-stock' }));
+            const itemPrice = document.getElementById('itemPrice').value;
+            const itemImage = document.getElementById('itemImage').value;
+
+            const shoe = {
+                name: itemName,
+                brand: itemBrand,
+                colors: itemColors,
+                price: itemPrice,
+                image: itemImage,
+                stock: 'in-stock' // Default to in-stock when added
+            };
+
+            shoes.push(shoe);
+            localStorage.setItem('shoes', JSON.stringify(shoes)); // Save to local storage
+            displayShoes();
+            this.reset(); // Reset the form
+            document.getElementById('colorList').innerHTML = ''; // Clear color list
+        });
+
+        document.getElementById('addColorButton').addEventListener('click', function() {
+            const colorInput = document.getElementById('itemColor');
+            const color = colorInput.value.trim();
+            if (color) {
+                const li = document.createElement('li');
+                li.textContent = color;
+                document.getElementById('colorList').appendChild(li);
+                colorInput.value = ''; // Clear the input
+            }
+        });
+
+        function displayShoes() {
+            const shoeList = document.getElementById('shoes');
+            const outOfStockList = document.getElementById('outOfStockShoes');
+            shoeList.innerHTML = ''; // Clear the list
+            outOfStockList.innerHTML = ''; // Clear the out of stock list
+
+            shoes.forEach((shoe, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${shoe.image}" alt="${shoe.name}" style="width: 50px; height: auto;">
+                    <strong>${shoe.name}</strong> - برند: ${shoe.brand} - قیمت: ${shoe.price} تومان
+                    <button onclick="removeShoe(${index})">حذف</button>
+                    <a href="product.html?index=${index}">مشاهده محصول</a>
+                    <button onclick="setColorsOutOfStock(${index})">تنظیم رنگ‌ها به ناموجود</button>
+                `;
+                shoeList.appendChild(li);
+            });
+        }
+
+        function removeShoe(index) {
+            shoes.splice(index, 1);
+            localStorage.setItem('shoes', JSON.stringify(shoes)); // Update local storage
+            displayShoes();
+        }
+
+        function setColorsOutOfStock(index) {
+            const shoe = shoes[index];
+            const colorsOutOfStock = prompt(`کدام رنگ‌ها ناموجود هستند؟ (جدا شده با کاما)\nرنگ‌های موجود: ${shoe.colors.map(c => c.color).join(', ')}`);
+            if (colorsOutOfStock) {
+                const colorsArray = colorsOutOfStock.split(',').map(color => color.trim());
+                shoe.colors.forEach(colorObj => {
+                    if (colorsArray.includes(colorObj.color)) {
+                        colorObj.stock = 'out-of-stock'; // Change color stock status
+                    }
+                });
+
+                // Check if all colors are out of stock
+                const allOutOfStock = shoe.colors.every(colorObj => colorObj.stock === 'out-of-stock');
+                if (allOutOfStock) {
+                    shoe.stock = 'out-of-stock'; // Set shoe to out of stock
+                }
+
+                localStorage.setItem('shoes', JSON.stringify(shoes)); // Update local storage
+                displayShoes();
+            }
+        }
+
+        // Display shoes on page load
+        displayShoes();
+    </script>
+</body>
+</html>

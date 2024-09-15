@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title id="product-name">محصول</title>
+</head>
+<body>
+    <header>
+        <h1>نام فروشگاه</h1>
+        <h2>شعار فروشگاه</h2>
+        <nav>
+            <a href="login.html" class="login-button">ورود به حساب کاربری</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section id="product-details">
+            <img id="product-image" src="" alt="عکس محصول">
+            <h2 id="product-name-display"></h2>
+            <h3 id="product-brand"></h3>
+            <h3 id="product-price"></h3>
+            <p id="product-colors"></p>
+            <p id="product-stock"></p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 فروشگاه کفش. تمامی حقوق محفوظ است.</p>
+    </footer>
+
+    <script>
+        // Get the shoe data from local storage
+        const shoes = JSON.parse(localStorage.getItem('shoes')) || [];
+        const urlParams = new URLSearchParams(window.location.search);
+        const shoeIndex = urlParams.get('index');
+
+        if (shoeIndex !== null && shoeIndex < shoes.length) {
+            const shoe = shoes[shoeIndex];
+            document.getElementById('product-name').innerText = shoe.name;
+            document.getElementById('product-name-display').innerText = shoe.name;
+            document.getElementById('product-brand').innerText = `برند: ${shoe.brand}`;
+            document.getElementById('product-price').innerText = `قیمت: ${shoe.price} تومان`;
+            document.getElementById('product-image').src = shoe.image;
+            document.getElementById('product-colors').innerText = `رنگ‌ها: ${shoe.colors.join(', ')}`;
+            document.getElementById('product-stock').innerText = `موجودی: ${shoe.stock === 'in-stock' ? 'موجود' : 'ناموجود'}`;
+        } else {
+            document.getElementById('product-details').innerText = 'محصولی پیدا نشد.';
+        }
+    </script>
+</body>
+</html>

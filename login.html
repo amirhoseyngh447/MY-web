@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Admin Login</title>
+</head>
+<body>
+    <header>
+        <h1>Admin Login</h1>
+    </header>
+    <main class="container">
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" style="color: red;"></div>
+    </main>
+    <footer>
+        <p>&copy; 2023 فروشگاه کفش. تمامی حقوق محفوظ است.</p>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Dummy credentials for demonstration
+            const adminUsername = 'admin';
+            const adminPassword = 'password123';
+
+            if (username === adminUsername && password === adminPassword) {
+                // Redirect to admin dashboard (you'll create this page next)
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                document.getElementById('error-message').innerText = 'Invalid username or password!';
+            }
+        });
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Use the provided credentials for authentication
+            const adminUsername = 'Amirhoseyngh447';
+            const adminPassword = '1388';
+
+            if (username === adminUsername && password === adminPassword) {
+                // Redirect to admin dashboard (you'll create this page next)
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                document.getElementById('error-message').innerText = 'Invalid username or password!';
+            }
+        });
+    </script>
+</body>
+</html>

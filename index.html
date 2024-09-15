@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>فروشگاه کفش</title>
+</head>
+<body>
+    <header>
+        <h1>نام فروشگاه</h1>
+        <h2>شعار فروشگاه</h2>
+        <nav>
+            <a href="login.html" class="login-button">ورود به حساب کاربری</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="content">
+            <h3>کفش فروشی</h3>
+            <img src="#" alt="عکس کفش" class="hero-image">
+        </section>
+        <section class="items" id="items">
+            <h3>محصولات</h3>
+            <ul id="shoeList"></ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 فروشگاه کفش. تمامی حقوق محفوظ است.</p>
+    </footer>
+
+    <script>
+        const shoes = JSON.parse(localStorage.getItem('shoes')) || [];
+
+        function displayShoes() {
+            const shoeList = document.getElementById('shoeList');
+            shoeList.innerHTML = ''; // Clear the list
+
+            shoes.forEach((shoe, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${shoe.image}" alt="${shoe.name}" style="width: 50px; height: auto;">
+                    <strong>${shoe.name}</strong> - قیمت: ${shoe.price} تومان 
+                    <a href="product.html?index=${index}">مشاهده محصول</a> <!-- Link to product page -->
+                    `;
+                    shoeList.appendChild(li);
+                });
+            }
+
+        // Display shoes on page load
+        displayShoes();
+    </script>
+</body>
+</html>
